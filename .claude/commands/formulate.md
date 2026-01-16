@@ -30,8 +30,10 @@ Not every business rule maps to a scenario. Analyze each rule to understand what
 
 **Design constraints** - Decisions about what we're NOT building
 
-- "Counter has no maximum limit" → Usually untestable
-- Can't prove infinity; skip or note as implicit
+- Usually untestable - you can't prove an absence
+- Skip or note as implicit
+
+**Heuristic:** Before dismissing a rule as untestable, ask: "Can I design a scenario where this rule would be violated?" If yes, the behavior is observable and needs a scenario.
 
 **Implicit rules** - Covered by testing other behaviors
 
