@@ -5,11 +5,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 **Development:**
+
 - `npm run dev` - Start Vite development server with HMR
 - `npm run build` - TypeScript build + Vite production build
 - `npm run preview` - Preview production build
 
 **Code Quality:**
+
 - `npm run format:check` - Check code formatting with Prettier
 - `npm run format` - Auto-format code with Prettier
 - `npm run lint` - Run ESLint checks
@@ -17,6 +19,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run all` - Run format, lint, typecheck, and test sequentially
 
 **Testing:**
+
 - `npm test` - Run BDD tests with Playwright
 - `npm run test:ui` - Run tests in Playwright UI mode
 
