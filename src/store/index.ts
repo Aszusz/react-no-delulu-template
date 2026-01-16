@@ -6,9 +6,10 @@ import {
 import { reducer } from './reducers'
 import { AppActions } from './actions'
 import { logger } from './middleware/logger'
+import { gameLoop } from './middleware/gameLoop'
 
 const rootReducer = combineReducers({
-  counter: reducer,
+  game: reducer,
 })
 
 export type RootState = ReturnType<typeof rootReducer>
@@ -16,7 +17,7 @@ export type RootState = ReturnType<typeof rootReducer>
 export const store = createStore(
   rootReducer,
   undefined,
-  applyMiddleware(logger)
+  applyMiddleware(gameLoop, logger)
 )
 
 store.dispatch(AppActions['app/started']())

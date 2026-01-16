@@ -1,7 +1,145 @@
+import { useCallback, useRef, useLayoutEffect } from 'react'
+import { useAppDispatch, useAppSelector } from './hooks'
+import { AppActions } from './store/actions'
+import {
+  selectGameStatus,
+  selectSnake,
+  selectFood,
+  selectScore,
+} from './store/selectors'
+import { BOARD_SIZE, CELL_SIZE } from './store/state'
+import type { Direction } from './store/state'
+import { testIds } from '../test/steps/snake.testIds'
+
 function App() {
+  const dispatch = useAppDispatch()
+  const gameStatus = useAppSelector(selectGameStatus)
+  const snake = useAppSelector(selectSnake)
+  const food = useAppSelector(selectFood)
+  const score = useAppSelector(selectScore)
+  const boardRef = useRef<HTMLDivElement>(null)
+
+  // Handle keyboard at document level so we don't need focus
+  useLayoutEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const keyToDirection: Record<string, Direction> = {
+        ArrowUp: 'up',
+        ArrowDown: 'down',
+        ArrowLeft: 'left',
+        ArrowRight: 'right',
+      }
+      const direction = keyToDirection[e.key]
+      if (direction) {
+        e.preventDefault()
+        dispatch(AppActions['ui/changeDirection'](direction))
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [dispatch])
+
+  const handleBoardKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      // Also handle on board for accessibility
+      const keyToDirection: Record<string, Direction> = {
+        ArrowUp: 'up',
+        ArrowDown: 'down',
+        ArrowLeft: 'left',
+        ArrowRight: 'right',
+      }
+      const direction = keyToDirection[e.key]
+      if (direction) {
+        e.preventDefault()
+        dispatch(AppActions['ui/changeDirection'](direction))
+      }
+    },
+    [dispatch]
+  )
+
+  const handleStart = () => {
+    dispatch(AppActions['ui/startGame']())
+    boardRef.current?.focus()
+  }
+
+  const boardSize = BOARD_SIZE * CELL_SIZE
+
   return (
-    <div className="text-center">
-      <h1 className="py-8 text-5xl font-bold">Delulu is the Solulu</h1>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-900 text-white">
+      <h1 className="mb-4 text-3xl font-bold">Snake Game</h1>
+
+      <div className="mb-4">
+        Score: <span data-testid={testIds.score}>{score}</span>
+      </div>
+
+      <div
+        ref={boardRef}
+        data-testid={testIds.board}
+        tabIndex={0}
+        onKeyDown={handleBoardKeyDown}
+        className="relative border-2 border-gray-600 bg-gray-800 outline-none focus:border-green-500"
+        style={{ width: boardSize, height: boardSize }}
+      >
+        {snake.map((segment, index) => (
+          <div
+            key={index}
+            data-testid={testIds.snake}
+            className="absolute bg-green-500"
+            style={{
+              left: segment.x * CELL_SIZE,
+              top: segment.y * CELL_SIZE,
+              width: CELL_SIZE - 1,
+              height: CELL_SIZE - 1,
+            }}
+          />
+        ))}
+
+        <div
+          data-testid={testIds.food}
+          className="absolute bg-red-500"
+          style={{
+            left: food.x * CELL_SIZE,
+            top: food.y * CELL_SIZE,
+            width: CELL_SIZE - 1,
+            height: CELL_SIZE - 1,
+          }}
+        />
+
+        {gameStatus === 'idle' && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/70">
+            <button
+              data-testid={testIds.startButton}
+              onClick={handleStart}
+              className="rounded bg-green-600 px-6 py-3 text-xl font-bold hover:bg-green-500"
+            >
+              Start Game
+            </button>
+          </div>
+        )}
+
+        {gameStatus === 'gameOver' && (
+          <div
+            data-testid={testIds.gameOver}
+            className="absolute inset-0 flex flex-col items-center justify-center bg-black/70"
+          >
+            <div className="mb-4 text-2xl font-bold text-red-500">
+              Game Over!
+            </div>
+            <div className="mb-4">Final Score: {score}</div>
+            <button
+              data-testid={testIds.restartButton}
+              onClick={handleStart}
+              className="rounded bg-green-600 px-6 py-3 text-xl font-bold hover:bg-green-500"
+            >
+              Restart
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="mt-4 text-sm text-gray-400">
+        Use arrow keys to control the snake
+      </div>
     </div>
   )
 }
