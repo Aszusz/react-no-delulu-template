@@ -57,11 +57,12 @@ Create step definitions following the patterns in TESTING.md:
 
 ## Phase 5: Verify Red State
 
-1. Run tests again
-2. Confirm tests fail because:
+1. Run `npm run lint` and `npm run typecheck` - step definition code should pass
+2. Run tests - tests should FAIL because functionality doesn't exist yet
+3. Confirm tests fail for the right reasons:
    - Selectors/test IDs don't exist in the DOM yet (expected)
    - Application functionality doesn't exist yet (expected)
-3. If tests fail for other reasons (syntax errors, import issues), fix those
+4. If tests fail for other reasons (syntax errors, import issues), fix those
 
 ## Output
 
