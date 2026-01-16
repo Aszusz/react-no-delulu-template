@@ -42,3 +42,32 @@ Tests run against the Vite dev server at `http://localhost:5173` (auto-started u
 
 - Prettier: no semicolons, single quotes, Tailwind class sorting
 - ESLint: TypeScript-ESLint with React Hooks rules
+
+### BDD Workflow
+
+The project follows a structured BDD workflow with four commands:
+
+```
+/discover     → DISCOVERY.yml (structured requirements)
+/formulate    → _features/*.feature
+/automate-red → step definitions + testIds
+/automate-green → frontend implementation
+```
+
+### Test ID Architecture
+
+**Tests own the test IDs.** Step definition files export `testIds` as constants, and frontend code imports them.
+
+```typescript
+// test/steps/counter.steps.ts
+export const testIds = {
+  value: 'counter-value',
+  incrementButton: 'counter-increment-button',
+}
+
+// src/App.tsx
+import { testIds } from '../test/steps/counter.steps'
+<div data-testid={testIds.value}>{count}</div>
+```
+
+This ensures a single source of truth for test IDs between tests and implementation.
