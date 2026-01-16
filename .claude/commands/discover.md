@@ -12,7 +12,7 @@ If no arguments provided, ask what they want to build.
 
 Before asking questions, explore the codebase to understand context:
 
-1. **Read existing features** - Start with `_features/*.feature` files to understand what behaviors already exist
+1. **Read existing features** - Check TESTING.md for feature file locations, then read them to understand what behaviors already exist
 2. **Check for related functionality** - Search the codebase for code related to the user's idea
 3. **Identify if this already exists** - The user might want to modify/enhance an existing feature rather than create something new
 

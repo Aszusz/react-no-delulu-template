@@ -12,7 +12,7 @@ This phase requires judgment - not every business rule becomes a scenario, and s
 
 ## Phase 2: Determine Target Feature File
 
-1. Read existing `_features/*.feature` files
+1. Read TESTING.md for feature file locations, then read existing feature files
 2. Use best judgment to decide:
    - **Create new file** if this is a distinct new feature
    - **Modify existing file** if this extends or changes an existing feature
@@ -81,7 +81,7 @@ Then the counter displays 6
 
 ## Phase 4: Write Feature File
 
-- **New file**: Use kebab-case naming → `_features/{name}.feature`
+- **New file**: Check TESTING.md for the feature file location pattern
 - **Existing file**: Append new scenarios after existing ones
 
 ### Format
