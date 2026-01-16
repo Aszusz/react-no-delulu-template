@@ -13,6 +13,7 @@ export function reducer(
       increment: () => ({ ...state, count: state.count + 1 }),
       decrement: () => ({ ...state, count: state.count - 1 }),
       reset: () => ({ ...state, count: 0 }),
+      incrementBy: ({ amount }) => ({ ...state, count: state.count + amount }),
     },
     () => state
   )
