@@ -16,8 +16,12 @@
     "all": "npm run format && npm run lint && npm run typecheck && npm run test"
   },
   "dependencies": {
+    "@types/react-redux": "^7.1.34",
+    "disc-union": "^1.2.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "react-redux": "^9.2.0",
+    "redux": "^5.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
