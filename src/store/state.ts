@@ -1,7 +1,3 @@
-export interface AppState {
-  count: number
-}
+export type AppState = object
 
-export const initialState: AppState = {
-  count: 0,
-}
+export const initialState: AppState = {}

@@ -1,13 +1,7 @@
 import { discUnion, type DiscUnionOf } from 'disc-union'
 
 export const AppActions = discUnion({
-  'ui/increment': () => ({}),
-  'ui/decrement': () => ({}),
-  'ui/reset': () => ({}),
-  'ui/random-increment': () => ({}),
-  'ui/random-decrement': () => ({}),
-  'rnd/random-increment-done': (amount: number) => ({ amount }),
-  'rnd/random-decrement-done': (amount: number) => ({ amount }),
+  'app/started': () => ({}),
 })
 
 export type AppAction = DiscUnionOf<typeof AppActions>
