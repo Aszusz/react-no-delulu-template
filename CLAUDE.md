@@ -36,11 +36,12 @@ This is a React + TypeScript application using Vite as the build tool and Tailwi
 
 ### BDD Workflow
 
-The project follows a structured BDD workflow with four commands:
+The project follows a structured BDD workflow with five commands:
 
 ```
-/discover     → DISCOVERY.yml (structured requirements)
-/formulate    → feature files (Gherkin scenarios)
-/automate-red → step definitions (tests fail)
-/automate-green → implementation (tests pass)
+/discover         → DISCOVERY.yml (structured requirements)
+/formulate        → feature files (Gherkin scenarios)
+/automate-red     → step definitions (tests fail)
+/automate-green   → implementation (tests pass)
+/automate-refactor → refactor code (tests stay green)
 ```
