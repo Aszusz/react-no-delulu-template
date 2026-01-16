@@ -15,9 +15,6 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:5173',
     actionTimeout: 500,
-    // Ensure fresh context per test with no shared state
-    storageState: undefined,
-    serviceWorkers: 'block',
   },
   webServer: {
     command: 'npm run dev',

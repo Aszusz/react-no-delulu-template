@@ -1,5 +1,6 @@
 import { isAction, type Middleware, type Dispatch } from 'redux'
-import { AppActions } from '../actions'
+import { match } from 'disc-union'
+import { AppActions, type AppAction } from '../actions'
 
 const defaultRandomInt = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min
@@ -19,26 +20,24 @@ export const createRandomCounter =
       return next(action)
     }
 
-    if (
-      action.type === AppActions['ui/random-increment'].key ||
-      action.type === AppActions['ui/random-decrement'].key
-    ) {
-      const isIncrement = action.type === AppActions['ui/random-increment'].key
-      const amount = randomInt(5, 10)
-      const delayMs = amount * 200
-
-      delay(delayMs).then(() => {
-        if (isIncrement) {
-          dispatch(AppActions['rnd/random-increment-done'](amount))
-        } else {
-          dispatch(AppActions['rnd/random-decrement-done'](amount))
-        }
-      })
-
-      return
-    }
-
-    return next(action)
+    return match(
+      action as AppAction,
+      {
+        [AppActions['ui/random-increment'].key]: () => {
+          const amount = randomInt(5, 10)
+          delay(amount * 200).then(() =>
+            dispatch(AppActions['rnd/random-increment-done'](amount))
+          )
+        },
+        [AppActions['ui/random-decrement'].key]: () => {
+          const amount = randomInt(5, 10)
+          delay(amount * 200).then(() =>
+            dispatch(AppActions['rnd/random-decrement-done'](amount))
+          )
+        },
+      },
+      () => next(action)
+    )
   }
 
 export const randomCounter = createRandomCounter()

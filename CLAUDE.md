@@ -35,19 +35,23 @@ The app uses Redux with a **layer-based architecture** (not feature slices). Org
 
 ```
 src/store/
-├── index.ts          # store configuration, typed hooks (useAppDispatch, useAppSelector)
+├── index.ts          # store configuration, root reducer, middleware composition
 ├── state.ts          # state interfaces and initial state
 ├── actions.ts        # action definitions using disc-union
 ├── reducers.ts       # reducer functions using disc-union match
 ├── selectors.ts      # selector functions
-└── middleware/
-    └── logger.ts     # logging middleware with dependency injection
+└── middleware/       # middleware with dependency injection for testability
+
+src/hooks/
+└── index.ts          # typed hooks (useAppDispatch, useAppSelector)
 ```
 
 **Key patterns:**
 
 - **Minimal, normalized state** - store only essential data; derive everything else through selectors
 - **disc-union** for type-safe discriminated union actions
+- **Namespaced actions** - prefix actions by source/layer (e.g., `ui/`, `eff/`, `fs/`, `shell/`)
+- **Action keys** - reference actions via `AppActions['ui/increment'].key` not string literals
 - **Typed hooks**: `useAppDispatch` and `useAppSelector` instead of raw redux hooks
 - **Dependency injection** in middleware for testability (side effects as parameters with defaults)
 - **React components** - avoid `useEffect`; rely on `useAppDispatch` and `useAppSelector` for state management
