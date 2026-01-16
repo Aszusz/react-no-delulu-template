@@ -1,12 +1,6 @@
 import { testIds } from '../test/steps/counter.testIds'
 import { useAppDispatch, useAppSelector } from './hooks'
-import {
-  increment,
-  decrement,
-  reset,
-  randomIncrement,
-  randomDecrement,
-} from './store/actions'
+import { AppActions } from './store/actions'
 import { selectCount } from './store/selectors'
 
 function App() {
@@ -24,35 +18,35 @@ function App() {
       <div className="flex justify-center gap-2">
         <button
           data-testid={testIds.randomDecrementButton}
-          onClick={() => dispatch(randomDecrement())}
+          onClick={() => dispatch(AppActions['ui/random-decrement']())}
           className="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300"
         >
           Random -
         </button>
         <button
           data-testid={testIds.decrementButton}
-          onClick={() => dispatch(decrement())}
+          onClick={() => dispatch(AppActions['ui/decrement']())}
           className="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300"
         >
           -
         </button>
         <button
           data-testid={testIds.resetButton}
-          onClick={() => dispatch(reset())}
+          onClick={() => dispatch(AppActions['ui/reset']())}
           className="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300"
         >
           Reset
         </button>
         <button
           data-testid={testIds.incrementButton}
-          onClick={() => dispatch(increment())}
+          onClick={() => dispatch(AppActions['ui/increment']())}
           className="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300"
         >
           +
         </button>
         <button
           data-testid={testIds.randomIncrementButton}
-          onClick={() => dispatch(randomIncrement())}
+          onClick={() => dispatch(AppActions['ui/random-increment']())}
           className="rounded bg-gray-200 px-4 py-2 hover:bg-gray-300"
         >
           Random +

@@ -1,5 +1,5 @@
 import { isAction, type Middleware, type Dispatch } from 'redux'
-import { incrementBy } from '../actions'
+import { AppActions } from '../actions'
 
 const defaultRandomInt = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min
@@ -20,15 +20,19 @@ export const createRandomCounter =
     }
 
     if (
-      action.type === 'randomIncrement' ||
-      action.type === 'randomDecrement'
+      action.type === AppActions['ui/random-increment'].key ||
+      action.type === AppActions['ui/random-decrement'].key
     ) {
-      const sign = action.type === 'randomIncrement' ? 1 : -1
+      const isIncrement = action.type === AppActions['ui/random-increment'].key
       const amount = randomInt(5, 10)
       const delayMs = amount * 200
 
       delay(delayMs).then(() => {
-        dispatch(incrementBy(sign * amount))
+        if (isIncrement) {
+          dispatch(AppActions['rnd/random-increment-done'](amount))
+        } else {
+          dispatch(AppActions['rnd/random-decrement-done'](amount))
+        }
       })
 
       return
