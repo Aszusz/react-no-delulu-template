@@ -56,18 +56,22 @@ The project follows a structured BDD workflow with four commands:
 
 ### Test ID Architecture
 
-**Tests own the test IDs.** Step definition files export `testIds` as constants, and frontend code imports them.
+**Tests own the test IDs.** Test IDs live in separate `*.testIds.ts` files (no Node.js dependencies), which both step definitions and frontend code import.
 
 ```typescript
-// test/steps/counter.steps.ts
+// test/steps/counter.testIds.ts (pure JS, no Node deps)
 export const testIds = {
   value: 'counter-value',
   incrementButton: 'counter-increment-button',
 }
 
+// test/steps/counter.steps.ts
+import { testIds } from './counter.testIds'
+export { testIds }
+
 // src/App.tsx
-import { testIds } from '../test/steps/counter.steps'
+import { testIds } from '../test/steps/counter.testIds'
 <div data-testid={testIds.value}>{count}</div>
 ```
 
-This ensures a single source of truth for test IDs between tests and implementation.
+This ensures a single source of truth while avoiding Node.js imports in the browser bundle.

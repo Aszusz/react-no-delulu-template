@@ -23,11 +23,12 @@ Implement step definitions for Gherkin scenarios. Tests should fail (red) becaus
 
 For each feature file needing automation:
 
-### 3a. Define Test IDs
+### 3a. Create Test IDs File
 
-Export a `testIds` object with semantic names for all elements the tests will interact with:
+Create a separate `*.testIds.ts` file with no Node.js dependencies (so frontend can import it):
 
 ```typescript
+// test/steps/feature.testIds.ts
 export const testIds = {
   elementName: 'feature-element-name',
 }
@@ -37,17 +38,17 @@ Naming convention: `{feature}-{element}-{type}` (e.g., `counter-increment-button
 
 ### 3b. Implement Steps
 
-Create step definitions using playwright-bdd's `createBdd()`:
+Create step definitions that import from the testIds file:
 
 ```typescript
+// test/steps/feature.steps.ts
 import { expect } from '@playwright/test'
 import { createBdd } from 'playwright-bdd'
+import { testIds } from './feature.testIds'
 
 const { Given, When, Then } = createBdd()
 
-export const testIds = {
-  // ...
-}
+export { testIds }
 
 Given('some precondition', async ({ page }) => {
   // Setup code
