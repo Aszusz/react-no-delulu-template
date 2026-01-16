@@ -11,8 +11,10 @@ export default defineConfig({
   testDir,
   outputDir: 'test/results',
   reporter: [['html', { outputFolder: 'test/report' }]],
+  expect: { timeout: 500 },
   use: {
     baseURL: 'http://localhost:5173',
+    actionTimeout: 500,
   },
   webServer: {
     command: 'npm run dev',
