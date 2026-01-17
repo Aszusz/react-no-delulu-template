@@ -40,6 +40,7 @@ src/store/
 ├── actions.ts        # action definitions using disc-union
 ├── reducers.ts       # reducer functions using disc-union match
 ├── selectors.ts      # selector functions
+├── effects.ts        # side effect types and defaults for dependency injection
 └── middleware/       # middleware with dependency injection for testability
 
 src/hooks/

@@ -6,7 +6,9 @@ import {
 import { reducer } from './reducers'
 import { AppActions } from './actions'
 import { logger } from './middleware/logger'
-import { gameLoop } from './middleware/gameLoop'
+import { createGameLoopMiddleware } from './middleware/gameLoop'
+import { type Effects, defaultEffects } from './effects'
+import { initialState, type AppState } from './state'
 
 const rootReducer = combineReducers({
   game: reducer,
@@ -14,12 +16,27 @@ const rootReducer = combineReducers({
 
 export type RootState = ReturnType<typeof rootReducer>
 
-export const store = createStore(
-  rootReducer,
-  undefined,
-  applyMiddleware(gameLoop, logger)
-)
+export type StoreConfig = {
+  initialState?: Partial<AppState>
+  effects?: Partial<Effects>
+}
 
-store.dispatch(AppActions['app/started']())
+export function createAppStore(config: StoreConfig = {}) {
+  const state: AppState = { ...initialState, ...config.initialState }
+  const middleware = createGameLoopMiddleware({
+    ...defaultEffects,
+    ...config.effects,
+  })
+  const store = createStore(
+    rootReducer,
+    { game: state } as unknown as undefined,
+    applyMiddleware(middleware, logger)
+  )
+  store.dispatch(AppActions['app/started']())
+  return store
+}
+
+// Default store (used when harness not active)
+export const store = createAppStore()
 
 export type AppDispatch = typeof store.dispatch

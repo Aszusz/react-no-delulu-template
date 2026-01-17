@@ -9,6 +9,7 @@ This project uses **Playwright-BDD** for E2E testing with Gherkin syntax.
 | Feature files    | `_features/*.feature`                      |
 | Step definitions | `test/steps/*.steps.ts`                    |
 | Test ID files    | `test/steps/*.testIds.ts`                  |
+| Test harness     | `test/steps/harness.ts`                    |
 | Generated tests  | `test/.gen/` (auto-generated, do not edit) |
 | Test reports     | `test/report/` (HTML)                      |
 | Test artifacts   | `test/results/`                            |
@@ -81,6 +82,12 @@ Examples:
 - `counter-increment-button`
 - `login-email-input`
 - `login-submit-button`
+
+## Test Harness
+
+The test harness (`test/steps/harness.ts`, `src/testHarness.ts`) allows tests to set initial state, mock effects, and read state directly via `window.__TEST_HARNESS__`.
+
+**Prefer pure UI tests.** Only use the harness when UI-only testing is impractical (e.g., controlling randomness, avoiding slow timers, asserting internal state not reflected in UI).
 
 ## Element Selection
 

@@ -2,18 +2,7 @@ import type { Middleware } from 'redux'
 import { AppActions, type AppAction } from '../actions'
 import { BOARD_SIZE, GAME_TICK_MS } from '../state'
 import type { Position } from '../state'
-
-type TimerDeps = {
-  setInterval: typeof setInterval
-  clearInterval: typeof clearInterval
-  randomInt: (max: number) => number
-}
-
-const defaultDeps: TimerDeps = {
-  setInterval: globalThis.setInterval.bind(globalThis),
-  clearInterval: globalThis.clearInterval.bind(globalThis),
-  randomInt: (max: number) => Math.floor(Math.random() * max),
-}
+import { type Effects, defaultEffects } from '../effects'
 
 function spawnFood(
   snake: Position[],
@@ -31,7 +20,7 @@ function spawnFood(
 }
 
 export const createGameLoopMiddleware =
-  (deps: TimerDeps = defaultDeps): Middleware =>
+  (deps: Effects = defaultEffects): Middleware =>
   (store) => {
     let intervalId: ReturnType<typeof setInterval> | null = null
 
