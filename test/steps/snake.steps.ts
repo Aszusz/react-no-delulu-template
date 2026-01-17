@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test'
 import { createBdd } from 'playwright-bdd'
 import { testIds } from './snake.testIds'
+import { setupDefault, getState } from './harness'
 
 const { Given, When, Then } = createBdd()
 
@@ -14,36 +15,45 @@ const GAME_TICK_MS = 200
 // =============================================================================
 
 Given('the game has not started', async ({ page }) => {
-  await page.goto(`/?t=${Date.now()}`, { waitUntil: 'load' })
+  await setupDefault(page)
   // Verify start button is visible (game not started)
   await expect(page.getByTestId(testIds.startButton)).toBeVisible()
 })
 
 Given('the game is running', async ({ page }) => {
-  await page.goto(`/?t=${Date.now()}`, { waitUntil: 'load' })
+  await setupDefault(page)
   await page.getByTestId(testIds.startButton).click()
-  // Wait for snake to be visible (game started)
-  await expect(page.getByTestId(testIds.snake).first()).toBeVisible()
+  // Wait for game to start (state shows running)
+  await expect(async () => {
+    const state = await getState(page)
+    expect(state?.game.gameStatus).toBe('running')
+  }).toPass({ timeout: 2000 })
 })
 
 Given('the snake is moving right', async ({ page }) => {
-  await page.goto(`/?t=${Date.now()}`, { waitUntil: 'load' })
+  await setupDefault(page)
   await page.getByTestId(testIds.startButton).click()
-  // Snake starts moving right by default
-  await expect(page.getByTestId(testIds.snake).first()).toBeVisible()
+  // Snake starts moving right by default - verify game is running
+  await expect(async () => {
+    const state = await getState(page)
+    expect(state?.game.gameStatus).toBe('running')
+    expect(state?.game.direction).toBe('right')
+  }).toPass({ timeout: 2000 })
 })
 
 Given('the snake is long enough to collide with itself', async ({ page }) => {
-  await page.goto(`/?t=${Date.now()}`, { waitUntil: 'load' })
+  await setupDefault(page)
   await page.getByTestId(testIds.startButton).click()
   // For testing, we need a snake that can collide with itself
-  // This requires the snake to have grown enough - implementation will need
-  // to support this scenario (e.g., eating food or starting with longer snake)
-  await expect(page.getByTestId(testIds.snake).first()).toBeVisible()
+  // Verify game is running - snake starts with 3 segments
+  await expect(async () => {
+    const state = await getState(page)
+    expect(state?.game.gameStatus).toBe('running')
+  }).toPass({ timeout: 2000 })
 })
 
 Given('the game has ended', async ({ page }) => {
-  await page.goto(`/?t=${Date.now()}`, { waitUntil: 'load' })
+  await setupDefault(page)
   await page.getByTestId(testIds.startButton).click()
   // Wait for game over by moving snake into wall
   // Move up to hit the top wall quickly
@@ -115,51 +125,57 @@ When('I restart the game', async ({ page }) => {
 // =============================================================================
 
 Then('the snake begins moving', async ({ page }) => {
-  // Get initial position of first snake segment
-  const snakeHead = page.getByTestId(testIds.snake).first()
-  const initialBox = await snakeHead.boundingBox()
+  // Get initial position of snake head from state
+  const initialState = await getState(page)
+  const initialHead = initialState?.game.snake[0]
+  expect(initialHead).toBeDefined()
 
   // Wait a tick and verify position changed
   await page.waitForTimeout(GAME_TICK_MS * 2)
-  const newBox = await snakeHead.boundingBox()
+  const newState = await getState(page)
+  const newHead = newState?.game.snake[0]
 
-  expect(initialBox).not.toBeNull()
-  expect(newBox).not.toBeNull()
+  expect(newHead).toBeDefined()
   // Position should have changed (snake moved)
-  expect(newBox!.x !== initialBox!.x || newBox!.y !== initialBox!.y).toBe(true)
+  expect(newHead!.x !== initialHead!.x || newHead!.y !== initialHead!.y).toBe(
+    true
+  )
 })
 
 Then('the snake moves in the new direction', async ({ page }) => {
-  // Get position after direction change
-  const snakeHead = page.getByTestId(testIds.snake).first()
-  const initialBox = await snakeHead.boundingBox()
+  // Get position from state after direction change
+  const initialState = await getState(page)
+  const initialHead = initialState?.game.snake[0]
+  expect(initialHead).toBeDefined()
 
   await page.waitForTimeout(GAME_TICK_MS * 2)
-  const newBox = await snakeHead.boundingBox()
+  const newState = await getState(page)
+  const newHead = newState?.game.snake[0]
 
-  expect(initialBox).not.toBeNull()
-  expect(newBox).not.toBeNull()
+  expect(newHead).toBeDefined()
   // Snake should be moving up (y decreasing) after pressing ArrowUp
-  expect(newBox!.y).toBeLessThan(initialBox!.y)
+  expect(newHead!.y).toBeLessThan(initialHead!.y)
 })
 
 Then('the snake continues moving right', async ({ page }) => {
-  const snakeHead = page.getByTestId(testIds.snake).first()
-  const initialBox = await snakeHead.boundingBox()
+  // Get position from state
+  const initialState = await getState(page)
+  const initialHead = initialState?.game.snake[0]
+  expect(initialHead).toBeDefined()
 
   await page.waitForTimeout(GAME_TICK_MS * 2)
-  const newBox = await snakeHead.boundingBox()
+  const newState = await getState(page)
+  const newHead = newState?.game.snake[0]
 
-  expect(initialBox).not.toBeNull()
-  expect(newBox).not.toBeNull()
+  expect(newHead).toBeDefined()
   // Snake should still be moving right (x increasing)
-  expect(newBox!.x).toBeGreaterThan(initialBox!.x)
+  expect(newHead!.x).toBeGreaterThan(initialHead!.x)
 })
 
 Then('the snake grows by one segment', async ({ page }) => {
-  // Count snake segments - should be more than initial
-  const segments = page.getByTestId(testIds.snake)
-  const count = await segments.count()
+  // Count snake segments from state - should be more than initial
+  const state = await getState(page)
+  const count = state?.game.snake.length ?? 0
   // Initial snake length is typically 3, after eating it should be > 3
   expect(count).toBeGreaterThan(3)
 })
@@ -171,8 +187,11 @@ Then('the score increases', async ({ page }) => {
 })
 
 Then('new food appears', async ({ page }) => {
-  // Verify food element is visible
-  await expect(page.getByTestId(testIds.food)).toBeVisible()
+  // Verify food exists in state
+  const state = await getState(page)
+  expect(state?.game.food).toBeDefined()
+  expect(state?.game.food.x).toBeGreaterThanOrEqual(0)
+  expect(state?.game.food.y).toBeGreaterThanOrEqual(0)
 })
 
 Then('the game ends', async ({ page }) => {
@@ -187,8 +206,11 @@ Then('I see the game over screen', async ({ page }) => {
 })
 
 Then('a new game begins', async ({ page }) => {
-  // Snake should be visible and game over should be hidden
-  await expect(page.getByTestId(testIds.snake).first()).toBeVisible()
+  // Game should be running and game over should be hidden
+  await expect(async () => {
+    const state = await getState(page)
+    expect(state?.game.gameStatus).toBe('running')
+  }).toPass({ timeout: 2000 })
   await expect(page.getByTestId(testIds.gameOver)).not.toBeVisible()
 })
 

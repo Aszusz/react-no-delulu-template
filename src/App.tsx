@@ -10,6 +10,7 @@ import {
 import { BOARD_SIZE, CELL_SIZE } from './store/state'
 import type { Direction } from './store/state'
 import { testIds } from '../test/steps/snake.testIds'
+import { SnakeCanvas } from './SnakeCanvas'
 
 function App() {
   const dispatch = useAppDispatch()
@@ -77,33 +78,10 @@ function App() {
         data-testid={testIds.board}
         tabIndex={0}
         onKeyDown={handleBoardKeyDown}
-        className="relative border-2 border-gray-600 bg-gray-800 outline-none focus:border-green-500"
+        className="relative border-2 border-gray-600 outline-none focus:border-green-500"
         style={{ width: boardSize, height: boardSize }}
       >
-        {snake.map((segment, index) => (
-          <div
-            key={index}
-            data-testid={testIds.snake}
-            className="absolute bg-green-500"
-            style={{
-              left: segment.x * CELL_SIZE,
-              top: segment.y * CELL_SIZE,
-              width: CELL_SIZE - 1,
-              height: CELL_SIZE - 1,
-            }}
-          />
-        ))}
-
-        <div
-          data-testid={testIds.food}
-          className="absolute bg-red-500"
-          style={{
-            left: food.x * CELL_SIZE,
-            top: food.y * CELL_SIZE,
-            width: CELL_SIZE - 1,
-            height: CELL_SIZE - 1,
-          }}
-        />
+        <SnakeCanvas snake={snake} food={food} />
 
         {gameStatus === 'idle' && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/70">

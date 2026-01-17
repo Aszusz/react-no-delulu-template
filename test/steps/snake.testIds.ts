@@ -1,8 +1,6 @@
 export const testIds = {
   // Game board
   board: 'snake-board',
-  snake: 'snake-segment',
-  food: 'snake-food',
 
   // UI controls
   startButton: 'snake-start-button',
