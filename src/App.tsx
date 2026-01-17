@@ -23,6 +23,13 @@ function App() {
   // Handle keyboard at document level so we don't need focus
   useLayoutEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && gameStatus !== 'running') {
+        e.preventDefault()
+        dispatch(AppActions['ui/startGame']())
+        boardRef.current?.focus()
+        return
+      }
+
       const keyToDirection: Record<string, Direction> = {
         ArrowUp: 'up',
         ArrowDown: 'down',
@@ -38,7 +45,7 @@ function App() {
 
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [dispatch])
+  }, [dispatch, gameStatus])
 
   const handleBoardKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -116,7 +123,7 @@ function App() {
       </div>
 
       <div className="mt-4 text-sm text-gray-400">
-        Use arrow keys to control the snake
+        Press Enter to start • Use arrow keys to control
       </div>
     </div>
   )
