@@ -2,7 +2,7 @@ import { match } from 'disc-union'
 import type { AppState } from './state'
 import { initialState } from './state'
 import type { AppAction } from './actions'
-import { oppositeDirections, tick } from './snake'
+import { oppositeDirections, getActualDirection, tick } from './snake'
 
 export function reducer(
   state: AppState = initialState,
@@ -20,7 +20,7 @@ export function reducer(
 
       'ui/changeDirection': ({ direction }) =>
         state.gameStatus !== 'running' ||
-        direction === oppositeDirections[state.direction]
+        direction === oppositeDirections[getActualDirection(state.snake)]
           ? state
           : { ...state, direction },
 

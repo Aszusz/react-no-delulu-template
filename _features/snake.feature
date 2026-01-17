@@ -41,3 +41,8 @@ Feature: Snake Game
     When I restart the game
     Then a new game begins
     And the score resets to zero
+
+  Scenario: Rapid direction changes cannot reverse into self
+    Given the snake is moving right
+    When I change direction to up then quickly to left
+    Then the snake does not reverse into itself

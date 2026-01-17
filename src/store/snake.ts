@@ -8,6 +8,17 @@ export const oppositeDirections: Record<Direction, Direction> = {
   right: 'left',
 }
 
+export function getActualDirection(snake: Position[]): Direction {
+  const head = snake[0]
+  const neck = snake[1]
+  const dx = head.x - neck.x
+  const dy = head.y - neck.y
+  if (dx > 0) return 'right'
+  if (dx < 0) return 'left'
+  if (dy > 0) return 'down'
+  return 'up'
+}
+
 function moveHead(head: Position, direction: Direction): Position {
   switch (direction) {
     case 'up':

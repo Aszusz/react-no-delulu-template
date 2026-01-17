@@ -120,6 +120,13 @@ When('I restart the game', async ({ page }) => {
   await page.getByTestId(testIds.restartButton).click()
 })
 
+When('I change direction to up then quickly to left', async ({ page }) => {
+  // Rapid direction changes without waiting for a tick between them
+  // This attempts to bypass the opposite-direction guard
+  await page.keyboard.press('ArrowUp')
+  await page.keyboard.press('ArrowLeft')
+})
+
 // =============================================================================
 // THEN steps - Verify outcomes
 // =============================================================================
@@ -217,4 +224,13 @@ Then('a new game begins', async ({ page }) => {
 Then('the score resets to zero', async ({ page }) => {
   const scoreText = await page.getByTestId(testIds.score).textContent()
   expect(scoreText).toBe('0')
+})
+
+Then('the snake does not reverse into itself', async ({ page }) => {
+  // Wait for at least one tick to process the direction changes
+  await page.waitForTimeout(GAME_TICK_MS * 2)
+
+  // Verify game is still running (not game over from self-collision)
+  const state = await getState(page)
+  expect(state?.game.gameStatus).toBe('running')
 })
