@@ -1,10 +1,8 @@
 import type { Middleware } from 'redux'
-
-const defaultLog = (message: string) => console.log(message)
-const defaultNow = () => new Date()
+import { defaultEffects, type Effects } from '../effects'
 
 export const createLogger =
-  (log = defaultLog, now = defaultNow): Middleware =>
+  ({ log, now }: Effects = defaultEffects): Middleware =>
   () =>
   (next) =>
   (action) => {

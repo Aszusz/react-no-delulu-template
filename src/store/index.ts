@@ -6,8 +6,7 @@ import {
 import { reducer } from './reducers'
 import { AppActions } from './actions'
 import { logger } from './middleware/logger'
-import { createGameLoopMiddleware } from './middleware/gameLoop'
-import { type Effects, defaultEffects } from './effects'
+import { type Effects } from './effects'
 import { initialState, type AppState } from './state'
 
 const rootReducer = combineReducers({
@@ -23,14 +22,11 @@ export type StoreConfig = {
 
 export function createAppStore(config: StoreConfig = {}) {
   const state: AppState = { ...initialState, ...config.initialState }
-  const middleware = createGameLoopMiddleware({
-    ...defaultEffects,
-    ...config.effects,
-  })
+
   const store = createStore(
     rootReducer,
     { game: state } as unknown as undefined,
-    applyMiddleware(middleware, logger)
+    applyMiddleware(logger)
   )
   store.dispatch(AppActions['app/started']())
   return store
