@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__github__*",
+      "mcp__playwright__*",
+      "Skill(*)",
+
+      "Bash(git:*)",
+      "Bash(npm:*)",
+      "Bash(test:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(tree:*)"
+    ]
+  }
+}
