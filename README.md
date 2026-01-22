@@ -19,9 +19,12 @@ A React template with TDD/BDD workflows powered by Claude Code.
 
 The template uses GitHub MCP for issue management. Generate a Personal Access Token:
 
-1. Go to [GitHub Settings > Developer settings > Personal access tokens > Tokens (classic)](https://github.com/settings/tokens)
-2. Click **Generate new token (classic)**
-3. Select the `repo` scope
+1. Go to [GitHub Settings > Developer settings > Personal access tokens > Fine-grained tokens](https://github.com/settings/personal-access-tokens/new)
+2. Set **Repository access** to your repository
+3. Under **Permissions**, enable:
+   - Contents: Read and write
+   - Issues: Read and write
+   - Pull requests: Read and write
 4. Copy the token and add it to `.env`:
    ```bash
    cp .env.example .env
