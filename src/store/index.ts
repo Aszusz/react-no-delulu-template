@@ -10,7 +10,7 @@ import { type Effects } from './effects'
 import { initialState, type AppState } from './state'
 
 const rootReducer = combineReducers({
-  game: reducer,
+  app: reducer,
 })
 
 export type RootState = ReturnType<typeof rootReducer>
@@ -25,7 +25,7 @@ export function createAppStore(config: StoreConfig = {}) {
 
   const store = createStore(
     rootReducer,
-    { game: state } as unknown as undefined,
+    { app: state } as unknown as undefined,
     applyMiddleware(logger)
   )
   store.dispatch(AppActions['app/started']())
