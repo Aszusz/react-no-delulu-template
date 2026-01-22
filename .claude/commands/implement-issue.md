@@ -19,12 +19,12 @@ Orchestrate the implementation of issue #$1 by detecting labels, routing to the 
 
 Based on detected labels, determine the workflow and create the appropriate branch:
 
-| Priority | Labels                            | Workflow               | Branch Pattern     |
-| -------- | --------------------------------- | ---------------------- | ------------------ |
-| 1        | `design`, `ui`, `frontend`        | Design Workflow        | `design/issue-$1`  |
-| 2        | `bug`, `fix`, `hotfix`            | Bug Fix Workflow       | `fix/issue-$1`     |
-| 3        | `refactor`, `chore`               | Refactor-Only Workflow | `refactor/issue-$1`|
-| 4        | `feature`, `enhancement`, or none | TDD Workflow           | `feature/issue-$1` |
+| Priority | Labels                            | Workflow               | Branch Pattern      |
+| -------- | --------------------------------- | ---------------------- | ------------------- |
+| 1        | `design`, `ui`, `frontend`        | Design Workflow        | `design/issue-$1`   |
+| 2        | `bug`, `fix`, `hotfix`            | Bug Fix Workflow       | `fix/issue-$1`      |
+| 3        | `refactor`, `chore`               | Refactor-Only Workflow | `refactor/issue-$1` |
+| 4        | `feature`, `enhancement`, or none | TDD Workflow           | `feature/issue-$1`  |
 
 ```bash
 git checkout -b [branch-pattern]
@@ -143,12 +143,12 @@ git log --oneline main..HEAD
 
 **Expected commits by workflow:**
 
-| Workflow      | Commits | Prefixes                        |
-| ------------- | ------- | ------------------------------- |
-| Design        | 1       | `design:`                       |
-| Bug Fix       | 1       | `fix:`                          |
-| Refactor-Only | 1       | `refactor:`                     |
-| TDD (default) | 3       | `test:`, `feat:`, `refactor:`   |
+| Workflow      | Commits | Prefixes                      |
+| ------------- | ------- | ----------------------------- |
+| Design        | 1       | `design:`                     |
+| Bug Fix       | 1       | `fix:`                        |
+| Refactor-Only | 1       | `refactor:`                   |
+| TDD (default) | 3       | `test:`, `feat:`, `refactor:` |
 
 ## 5. Submit Pull Request
 

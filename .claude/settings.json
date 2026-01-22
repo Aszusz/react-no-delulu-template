@@ -4,6 +4,15 @@
       "mcp__github__*",
       "mcp__playwright__*",
       "Skill(*)",
+      "Task(*)",
+
+      "Read(*)",
+      "Edit(*)",
+      "Write(*)",
+      "Glob(*)",
+      "Grep(*)",
+
+      "WebFetch",
 
       "Bash(git:*)",
       "Bash(npm:*)",
